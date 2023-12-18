@@ -1,2 +1,5 @@
 # tutorial-go-fr
-go-frを試す
+
+<img src="./doc/image.png">
+
+go-fr を試す
