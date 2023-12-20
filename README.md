@@ -2,7 +2,7 @@
 
 <img src="./doc/image.png">
 
-go-fr を試す
+[go-fr](https://gofr.dev/) を試す
 
 ## 作成する題材
 
