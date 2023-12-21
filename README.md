@@ -1,6 +1,6 @@
 # tutorial-go-fr
 
-<img src="./doc/image.png">
+<img src="./docs/image.png">
 
 [go-fr](https://gofr.dev/) を試す
 
