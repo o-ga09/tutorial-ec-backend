@@ -11,6 +11,7 @@ var (
 	INVALID_LACK_STOCK = errors.New("在庫数が不足しています 。")
 
 	NOT_FOUND = errors.New("商品が見つかりません。")
+	INVALID_QUANTITY = errors.New("カートの商品数と一致しません。")
 )
 
 type Error struct {
