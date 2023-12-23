@@ -28,6 +28,7 @@ require (
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
 	github.com/Azure/go-ntlmssp v0.0.0-20221128193559-754e69321358 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.1
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/trace v1.21.0 // indirect
 	github.com/GoogleCloudPlatform/opentelemetry-operations-go/internal/resourcemapping v0.45.0 // indirect
 	github.com/Shopify/sarama v1.38.0 // indirect
@@ -140,9 +141,9 @@ require (
 	google.golang.org/grpc v1.59.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
-	gorm.io/driver/mysql v1.4.5 // indirect
+	gorm.io/driver/mysql v1.4.5
 	gorm.io/driver/postgres v1.4.8 // indirect
 	gorm.io/driver/sqlite v1.4.4 // indirect
 	gorm.io/driver/sqlserver v1.4.1 // indirect
-	gorm.io/gorm v1.25.5 // indirect
+	gorm.io/gorm v1.25.5
 )
