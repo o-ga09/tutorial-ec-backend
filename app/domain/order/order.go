@@ -34,6 +34,7 @@ type OrderProduct struct {
 	quantity int
 }
 
+//go:generate moq -out OrderDomainService_mock.go . OrderDomainService
 type OrderDomainService interface {
 	OrderProducts(ctx context.Context,cart *cartDomain.Cart, now time.Time) (string, error)
 }
