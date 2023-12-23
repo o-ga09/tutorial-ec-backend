@@ -1,9 +1,7 @@
 # workflowの名前
-name: Backend Test
+name: Backend Test PR
 # ワークフローを実行する条件
 on:
-  # push時に.goとwarkflowの定義ファイルに変更があった場合と
-  push:
   pull_request:
 # 実行するジョブを定義する
 jobs:
