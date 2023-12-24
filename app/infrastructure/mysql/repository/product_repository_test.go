@@ -121,53 +121,21 @@ func Test_productRepository_FindByIDs(t *testing.T) {
 }
 
 func Test_productRepository_Save(t *testing.T) {
+	// Saveのテストをスキップする
 	t.Skip()
-	// *gorm,DBのモックを生成
-	db, mockdb, err := dbmock.GetNewDbMock()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// クエリが実行された後の結果を設定
-	
-	mockdb.ExpectBegin()
-	mockdb.ExpectQuery(regexp.QuoteMeta("INSERT INTO \"products\" (`id`,`owner_id`,`name`,`description`,`price`,`stock`) VALUES (?,?,?,?,?,?)")).
-		WithArgs("002","test","user2","test",1,1)
-	mockdb.ExpectCommit()
-	repository := NewProductRepository(db)
-
-	type field struct {
-		id          string // 商品ID
-		ownerID     string // 出品者ID
-		name        string // 商品名
-		description string // 商品の説明
-		price       int64  // 商品金額
-		stock       int    // 商品在庫
-	}
-	tests := []struct {
-		name    string
-		field    field
-		wantErr bool
-	}{
-		{name: "正常系 - 挿入",field: field{id: "002",ownerID: "test",name: "user2",description: "test",price: 1,stock: 1},wantErr: false},
-		// {name: "正常系 - 更新",field: field{id: "001",ownerID: "test1",name: "user1",description: "test",price: 1,stock: 1},wantErr: false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			args, _ := product.Reconstruct(tt.field.id,tt.field.ownerID,tt.field.name,tt.field.description,tt.field.price,tt.field.stock)
-			if err := repository.Save(context.Background(),args); (err != nil) != tt.wantErr {
-				t.Errorf("productRepository.Save() error = %v, wantErr %v", err, tt.wantErr)
-			}
-
-			// テストケース内でExpectationsWereMetを呼び出す
-			if err := mockdb.ExpectationsWereMet(); err != nil {
-				t.Errorf("error = %v",err)
-			}
-		})
-	}
 }
 
+func Test_productRepository_Update(t *testing.T) {
+	// Updateのテストはスキップする
+	t.Skip()
+}
+
+func Test_productRepository_Delete(t *testing.T) {
+	// Deleteのテストはスキップする
+	t.Skip()
+}
 func TestNewProductRepository(t *testing.T) {
+	db, _, _ := dbmock.GetNewDbMock()
 	type args struct {
 		conn *gorm.DB
 	}
@@ -176,7 +144,7 @@ func TestNewProductRepository(t *testing.T) {
 		args args
 		want product.ProductRepository
 	}{
-		// TODO: Add test cases.
+		{name: "正常系",args: args{conn: db},want: NewProductRepository(db)},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -57,7 +57,6 @@ func (r *productRepository) FindByIDs(ctx context.Context, ids []string) ([]prod
 
 // Save implements product.ProductRepository.
 func (r *productRepository) Save(ctx context.Context, product *product.Product) error {
-	_, err := r.FindByID(ctx,product.ID())
 	repoProduct := Product{
 		Id: product.ID(),
 		OwnerID: product.OwnerID(),
@@ -66,12 +65,27 @@ func (r *productRepository) Save(ctx context.Context, product *product.Product) 
 		Price: product.Price(),
 		Stock: product.Stock(),
 	}
-	if err != nil {
-		r.conn.Save(repoProduct)
-		return nil
-	}
 
 	r.conn.Create(repoProduct)
+	return nil
+}
+
+func (r *productRepository) Update(ctx context.Context, product *product.Product) error {
+	repoProduct := Product{
+		Id: product.ID(),
+		OwnerID: product.OwnerID(),
+		Name: product.Name(),
+		Description: product.Description(),
+		Price: product.Price(),
+		Stock: product.Stock(),
+	}
+
+	r.conn.Save(repoProduct)
+	return nil
+}
+
+func (r *productRepository) Delete(ctx context.Context, product *product.Product) error {
+	r.conn.Where("id = ?",product.ID()).Delete(Product{})
 	return nil
 }
 
