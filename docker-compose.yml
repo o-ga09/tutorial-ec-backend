@@ -26,10 +26,12 @@ services:
       args:
         - target=dev
     environment:
-      ENV: DEV
-      PORT: 8080
-      DATABASE_URL: api:P@ssw0rd@tcp(api-dbsrv01)/api?charset=utf8&parseTime=True&loc=Local
-      ALLOW_URL: "*"
+      APP_NAME: app
+      APP_VERSION: DEV
+      LOG_LEVEL: info
+      HTTP_PORT: 8080
+      DB_DIALECT: api:P@ssw0rd@tcp(api-dbsrv01)/api?charset=utf8&parseTime=True&loc=Local
+      Access-Control-Allow-Origin: "*"
     volumes:
       - .:/app
     ports:
