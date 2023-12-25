@@ -3,11 +3,14 @@ module github.com/o-ga09/tutorial-go-fr
 go 1.21.5
 
 require (
+	cloud.google.com/go/logging v1.8.1
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/google/go-cmp v0.6.0
 	github.com/google/uuid v1.4.0
 	gofr.dev v1.0.3
 )
+
+require cloud.google.com/go/longrunning v0.5.4 // indirect
 
 require (
 	cloud.google.com/go v0.110.10 // indirect
@@ -125,7 +128,7 @@ require (
 	go.opentelemetry.io/otel/exporters/zipkin v1.21.0 // indirect
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.21.0 // indirect
-	go.opentelemetry.io/otel/trace v1.21.0 // indirect
+	go.opentelemetry.io/otel/trace v1.21.0
 	golang.org/x/crypto v0.16.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/oauth2 v0.14.0 // indirect
