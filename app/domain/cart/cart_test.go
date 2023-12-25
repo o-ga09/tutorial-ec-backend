@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/o-ga09/tutorial-go-fr/pkg/strings"
+	"github.com/o-ga09/tutorial-ec-backend/pkg/strings"
 )
 
 func TestCart_QuantityByProductID(t *testing.T) {

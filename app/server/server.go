@@ -1,15 +1,34 @@
 package server
 
 import (
-	orderHnadler "github.com/o-ga09/tutorial-go-fr/app/server/handler/order"
-	"gofr.dev/pkg/gofr"
+	"github.com/gin-gonic/gin"
+	"github.com/o-ga09/tutorial-ec-backend/app/config"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/handler/health"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
 
-func Run() {
-	app := gofr.New()
-	handler := orderHnadler.OrderHandler{}
-    app.GET("/v1/health",gofr.HeartBeatHandler)
-    app.GET("/v1/health_db",gofr.HealthHandler)
-	app.GET("/v1/order",handler.OrderHandler)
-    app.Start()
+func NewServer() (*gin.Engine, error) {
+	r := gin.New()
+	cfg, _ := config.New()
+	if cfg.Env == "PROD" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	// setting logger
+	logger := middleware.New()
+	httpLogger := middleware.RequestLogger(logger)
+
+	//setting a CORS
+	cors := middleware.CORS()
+
+	r.Use(cors)
+	r.Use(httpLogger)
+
+	v1 := r.Group("/v1")
+	{
+		systemHandler := health.NewHealthCheckHandler()
+		v1.GET("/health", systemHandler.HealthCheck)
+	}
+
+	return r, nil
 }

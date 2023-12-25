@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/uuid"
 
-	errDomain "github.com/o-ga09/tutorial-go-fr/app/domain/error"
-	"github.com/o-ga09/tutorial-go-fr/pkg/strings"
+	errDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/error"
+	"github.com/o-ga09/tutorial-ec-backend/pkg/strings"
 )
 
 const (

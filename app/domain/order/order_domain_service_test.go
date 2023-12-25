@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	cartDomain "github.com/o-ga09/tutorial-go-fr/app/domain/cart"
-	productDoamin "github.com/o-ga09/tutorial-go-fr/app/domain/product"
+	cartDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/cart"
+	productDoamin "github.com/o-ga09/tutorial-ec-backend/app/domain/product"
 )
 
 func TestNewOrderDomainService(t *testing.T) {

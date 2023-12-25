@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/o-ga09/tutorial-go-fr/app/config"
+	"github.com/o-ga09/tutorial-ec-backend/app/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

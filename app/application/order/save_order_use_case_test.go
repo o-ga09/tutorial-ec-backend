@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	cartDomain "github.com/o-ga09/tutorial-go-fr/app/domain/cart"
-	orderDomain "github.com/o-ga09/tutorial-go-fr/app/domain/order"
-	"github.com/o-ga09/tutorial-go-fr/pkg/strings"
+	cartDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/cart"
+	orderDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/order"
+	"github.com/o-ga09/tutorial-ec-backend/pkg/strings"
 )
 
 func TestNewSaveOrderUseCase(t *testing.T) {

@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	cartDomain "github.com/o-ga09/tutorial-go-fr/app/domain/cart"
-	errDomain "github.com/o-ga09/tutorial-go-fr/app/domain/error"
-	productDoamin "github.com/o-ga09/tutorial-go-fr/app/domain/product"
+	cartDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/cart"
+	errDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/error"
+	productDoamin "github.com/o-ga09/tutorial-ec-backend/app/domain/product"
 )
 
 type orderDomainService struct {

@@ -3,7 +3,7 @@ package cart
 import (
 	"time"
 
-	errDomain "github.com/o-ga09/tutorial-go-fr/app/domain/error"
+	errDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/error"
 )
 
 // ================================ //

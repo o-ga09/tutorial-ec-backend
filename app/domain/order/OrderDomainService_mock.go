@@ -5,7 +5,7 @@ package order
 
 import (
 	"context"
-	cartDomain "github.com/o-ga09/tutorial-go-fr/app/domain/cart"
+	cartDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/cart"
 	"sync"
 	"time"
 )

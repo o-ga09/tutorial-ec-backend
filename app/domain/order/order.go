@@ -14,8 +14,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	cartDomain "github.com/o-ga09/tutorial-go-fr/app/domain/cart"
-	"github.com/o-ga09/tutorial-go-fr/pkg/strings"
+	cartDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/cart"
+	"github.com/o-ga09/tutorial-ec-backend/pkg/strings"
 )
 
 type Order struct {

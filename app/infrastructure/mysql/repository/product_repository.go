@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/o-ga09/tutorial-go-fr/app/domain/product"
+	"github.com/o-ga09/tutorial-ec-backend/app/domain/product"
 	"gorm.io/gorm"
 )
 

@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"cloud.google.com/go/logging"
-	"github.com/o-ga09/tutorial-go-fr/app/config"
+	"github.com/o-ga09/tutorial-ec-backend/app/config"
 	"go.opentelemetry.io/otel/trace"
 )
 

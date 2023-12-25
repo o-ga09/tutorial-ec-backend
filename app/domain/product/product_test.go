@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/google/uuid"
-	"github.com/o-ga09/tutorial-go-fr/pkg/strings"
+	"github.com/o-ga09/tutorial-ec-backend/pkg/strings"
 )
 
 func TestNewProduct(t *testing.T) {
