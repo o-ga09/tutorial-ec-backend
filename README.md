@@ -1,17 +1,12 @@
-# tutorial-go-fr
+# EC Backend API
 
 <img src="./docs/image.png">
 
-[go-fr](https://gofr.dev/) を試す
-
-## 作成する題材
-
-技術書典の本
-Go 言語で構築するクリーンアーキテクチャ設計
+Go + Gin + GORM を使用して、クリーンアーキテクチャで EC サイトのバックエンド API を作る
 
 ## 使用するフレームワーク
 
-- go-fr
+- Gin
 
 ## その他使用するミドルウェア
 
