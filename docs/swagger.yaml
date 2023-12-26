@@ -1,0 +1,71 @@
+definitions:
+  products.PostRequestParm:
+    properties:
+      description:
+        description: 商品の説明
+        type: string
+      name:
+        description: 商品名
+        type: string
+      owner_id:
+        description: 出品者ID
+        type: string
+      price:
+        description: 商品金額
+        type: integer
+      stock:
+        description: 商品在庫
+        type: integer
+    type: object
+  products.ProductResponseModel:
+    properties:
+      description:
+        description: 商品の説明
+        type: string
+      id:
+        description: 商品ID
+        type: string
+      name:
+        description: 商品名
+        type: string
+      owner_id:
+        description: 出品者ID
+        type: string
+      price:
+        description: 商品金額
+        type: integer
+      stock:
+        description: 商品在庫
+        type: integer
+    type: object
+  products.postProductResponse:
+    properties:
+      product:
+        $ref: '#/definitions/products.ProductResponseModel'
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/products:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 登録商品
+        in: body
+        name: request
+        schema:
+          items:
+            $ref: '#/definitions/products.PostRequestParm'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/products.postProductResponse'
+      summary: 商品を保存する
+      tags:
+      - products
+swagger: "2.0"
