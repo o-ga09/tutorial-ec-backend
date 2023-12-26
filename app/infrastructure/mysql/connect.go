@@ -12,12 +12,9 @@ import (
 )
 
 func New(ctx context.Context) *gorm.DB {
-	cfg, err := config.New()
-	if err != nil {
-		log.Fatal(err)
-	}
+	cfg := config.GetConfig()
 
-	dialector := mysql.Open(cfg.Database_url)
+	dialector := mysql.Open(cfg.DB.DB_URL)
 
 	db, err := gorm.Open(dialector, &gorm.Config{NamingStrategy: schema.NamingStrategy{
 		SingularTable: false,
