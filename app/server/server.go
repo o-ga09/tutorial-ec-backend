@@ -9,8 +9,8 @@ import (
 
 func NewServer() (*gin.Engine, error) {
 	r := gin.New()
-	cfg, _ := config.New()
-	if cfg.Env == "PROD" {
+	cfg := config.GetConfig()
+	if cfg.Env.Env == "PROD" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

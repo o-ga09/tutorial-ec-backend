@@ -67,13 +67,13 @@ func New() *slog.Logger {
 
 		return a
 	}
-	cfg, _ := config.New()
-	projectID := cfg.ProjectID
+	cfg := config.GetConfig()
+	projectID := cfg.App.ProjectID
 	h := traceHandler{slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{AddSource: true, ReplaceAttr: replacer}), projectID}
 	newh := h.WithAttr([]slog.Attr{
 		slog.Group("logging.googleapis.com/labels",
 			slog.String("app", "MH-API"),
-			slog.String("env", cfg.Env),
+			slog.String("env", cfg.Env.Env),
 		),
 	})
 	logger := slog.New(newh)
