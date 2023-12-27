@@ -1,8 +1,23 @@
 package server
 
 import (
+	"context"
+
 	"github.com/gin-gonic/gin"
+	cartApp "github.com/o-ga09/tutorial-ec-backend/app/application/cart"
+	orderApp "github.com/o-ga09/tutorial-ec-backend/app/application/order"
+	productApp "github.com/o-ga09/tutorial-ec-backend/app/application/product"
+	userApp "github.com/o-ga09/tutorial-ec-backend/app/application/user"
 	"github.com/o-ga09/tutorial-ec-backend/app/config"
+	orderDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/order"
+	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql"
+	queryservice "github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/query_service"
+	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/repository"
+	redisRepo "github.com/o-ga09/tutorial-ec-backend/app/infrastructure/redis/repository"
+	cartHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/cart"
+	orderHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/order"
+	productsHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/products"
+	userHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/user"
 	"github.com/o-ga09/tutorial-ec-backend/app/server/handler/health"
 	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
@@ -24,11 +39,32 @@ func NewServer() (*gin.Engine, error) {
 	r.Use(cors)
 	r.Use(httpLogger)
 
+	db := mysql.New(context.Background())
+	systemHandler := health.NewHealthCheckHandler()
+	userRepo := repository.NewUserRepository(db)
+	productRepo := repository.NewProductRepository(db)
+	fetchQueryService := queryservice.NewproductQueryService(db)
+	orderRepo := repository.NewOrderRepository(db)
+	cartRepo := redisRepo.NewCartRepository()
+	userHandler := userHandler.NewHandler(userApp.NewFindUserUsecase(userRepo),userApp.NewSaveUserUsecase(userRepo))
+	productHandler := productsHandler.NewHandler(productApp.NewSaveProductUsecase(productRepo),productApp.NewFetchProductUseCase(fetchQueryService))
+	orderHandler := orderHandler.NewHandlre(orderApp.NewSaveOrderUseCase(orderDomain.NewOrderDomainService(orderRepo,productRepo),redisRepo.NewCartRepository()))
+	cartHandler := cartHandler.NewHandler(cartApp.NewAddCartUsecase(cartRepo,productRepo))
+
 	v1 := r.Group("/v1")
+	users := v1.Group("/users")
+	order := v1.Group("/order")
+	cart := v1.Group("/cart")
+	products := v1.Group("/products")
 	{
-		systemHandler := health.NewHealthCheckHandler()
 		v1.GET("/health", systemHandler.HealthCheck)
+		users.GET("/:id",userHandler.GetUserById)
+		products.GET("",productHandler.GetProducts)
+		products.POST("",productHandler.PostProducts)
+		order.POST("",orderHandler.PostOrders)
+		cart.POST("",cartHandler.PostCart)
 	}
+
 
 	return r, nil
 }
