@@ -12,11 +12,11 @@ func NewFetchProductUseCase(productQueryService ProductQueryService) *FetchProdu
 
 type FetchProductUseCaseDto struct {
 	ID string
-	ownerID     string // 出品者ID
-	name        string // 商品名
-	description string // 商品の説明
-	price       int64  // 商品金額
-	stock       int    // 商品在庫
+	OwnerID     string // 出品者ID
+	Name        string // 商品名
+	Description string // 商品の説明
+	Price       int64  // 商品金額
+	Stock       int    // 商品在庫
 }
 
 func(u FetchProductUseCase) Run(ctx context.Context) ([]*FetchProductUseCaseDto, error) {
@@ -30,11 +30,11 @@ func(u FetchProductUseCase) Run(ctx context.Context) ([]*FetchProductUseCaseDto,
 	for _, qsDto := range qsDtos {
 		ucDtos = append(ucDtos,&FetchProductUseCaseDto{
 			qsDto.ID,
-			qsDto.ownerID,
-			qsDto.name,
-			qsDto.description,
-			qsDto.price,
-			qsDto.stock,
+			qsDto.OwnerID,
+			qsDto.Name,
+			qsDto.Description,
+			qsDto.Price,
+			qsDto.Stock,
 		})
 	}
 

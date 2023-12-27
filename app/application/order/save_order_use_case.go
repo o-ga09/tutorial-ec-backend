@@ -15,7 +15,7 @@ type SaveOrderUseCase struct {
 }
 
 type SaveOrderUseCaseInputDto struct {
-	productID string
+	ProductID string
 	Quantity int
 }
 
@@ -50,7 +50,7 @@ func(s *SaveOrderUseCase) getValidCart(ctx context.Context,userID string, dtos [
 	}
 
 	for _, dto := range dtos {
-		pq, err := cart.QuantityByProductID(dto.productID)
+		pq, err := cart.QuantityByProductID(dto.ProductID)
 		if err != nil {
 			return nil, err
 		}

@@ -53,11 +53,11 @@ func TestSaveOrderUseCase_Run(t *testing.T) {
 	usecase := NewSaveOrderUseCase(&MockOrderDomainService,&MockCartRepository)
 	now := time.Now()
 	dtos := []SaveOrderUseCaseInputDto{
-		{productID: strings.RemoveHyphen(uuid.NewString()),Quantity: 1},
-		{productID: strings.RemoveHyphen(uuid.NewString()),Quantity: 3},
+		{ProductID: strings.RemoveHyphen(uuid.NewString()),Quantity: 1},
+		{ProductID: strings.RemoveHyphen(uuid.NewString()),Quantity: 3},
 	}
 	for _, dto := range dtos {
-		cart.AddProduct(dto.productID,dto.Quantity)
+		cart.AddProduct(dto.ProductID,dto.Quantity)
 	}
 
 	tests := []struct {
@@ -90,11 +90,11 @@ func TestSaveOrderUseCase_getValidCart(t *testing.T) {
 	userID := strings.RemoveHyphen(uuid.New().String())
 	cart, _ := cartDomain.NewCart(userID)
 	dtos := []SaveOrderUseCaseInputDto{
-		{productID: strings.RemoveHyphen(uuid.NewString()),Quantity: 1},
-		{productID: strings.RemoveHyphen(uuid.NewString()),Quantity: 3},
+		{ProductID: strings.RemoveHyphen(uuid.NewString()),Quantity: 1},
+		{ProductID: strings.RemoveHyphen(uuid.NewString()),Quantity: 3},
 	}
 	for _, dto := range dtos {
-		cart.AddProduct(dto.productID,dto.Quantity)
+		cart.AddProduct(dto.ProductID,dto.Quantity)
 	}
 
 	MockOrderDomainService := orderDomain.OrderDomainServiceMock{}
