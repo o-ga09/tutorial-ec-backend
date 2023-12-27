@@ -6,8 +6,7 @@ on:
       - "**"
     tags:
       - "v*"
-    paths:
-      - "**.go"
+
 jobs:
   api-spec:
     name: api-document
@@ -27,3 +26,43 @@ jobs:
       - name: create api document
         run: |
           swag init -g app/presentation/products/handler.go
+  build:
+    needs: api-spec
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Build ReDoc HTML
+        run: |
+          npm install -g redoc-cli
+          redoc-cli bundle docs/swagger.yaml
+          mkdir pages
+          mv redoc-static.html pages/spec.html
+      - uses: actions/upload-artifact@v3
+        with:
+          name: fastapi_doc
+          path: pages
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: pages
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/deploy-pages@v1
+        id: deployment
