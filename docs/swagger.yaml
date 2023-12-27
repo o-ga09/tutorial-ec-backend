@@ -1,4 +1,30 @@
 definitions:
+  cart.PostCartsParams:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
+  cart.Response:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  health.Response:
+    properties:
+      status:
+        type: string
+    type: object
+  order.PostOrderParams:
+    properties:
+      product_id:
+        type: string
+      quantity:
+        type: integer
+    type: object
   products.PostRequestParm:
     properties:
       description:
@@ -38,15 +64,131 @@ definitions:
         description: 商品在庫
         type: integer
     type: object
+  products.getProductResponse:
+    properties:
+      description:
+        description: 商品の説明
+        type: string
+      id:
+        description: 商品ID
+        type: string
+      name:
+        description: 商品名
+        type: string
+      owner_id:
+        description: 出品者ID
+        type: string
+      owner_name:
+        type: string
+      price:
+        description: 商品金額
+        type: integer
+      stock:
+        description: 商品在庫
+        type: integer
+    type: object
   products.postProductResponse:
     properties:
       product:
         $ref: '#/definitions/products.ProductResponseModel'
     type: object
+  user.getUserResponse:
+    properties:
+      user:
+        $ref: '#/definitions/user.userResponseModel'
+    type: object
+  user.userResponseModel:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact: {}
+  description: Goでクリーンアーキテクチャを使用して。バックエンドAPIを作成する
+  title: ECサイトバックエンドAPI
+  version: v0.1.0
 paths:
+  /v1/cart:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: カートの商品
+        in: body
+        name: request
+        schema:
+          $ref: '#/definitions/cart.PostCartsParams'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/cart.Response'
+      summary: カートに商品を保存する
+      tags:
+      - cart
+  /v1/health:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/health.Response'
+      summary: ヘルスチェック
+      tags:
+      - healthcheck
+  /v1/order:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 注文商品
+        in: body
+        name: request
+        schema:
+          items:
+            $ref: '#/definitions/order.PostOrderParams'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: 商品を注文する
+      tags:
+      - order
   /v1/products:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/products.getProductResponse'
+      summary: 商品一覧を取得する
+      tags:
+      - products
     post:
       consumes:
       - application/json
@@ -68,4 +210,23 @@ paths:
       summary: 商品を保存する
       tags:
       - products
+  /v1/products/:id:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: ユーザーID
+        in: path
+        name: request
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.getUserResponse'
+      summary: ユーザーを取得する
+      tags:
+      - users
 swagger: "2.0"

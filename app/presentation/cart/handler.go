@@ -19,6 +19,14 @@ func NewHandler(addCartUsecase *cartApp.AddCartUsecase) handler {
 	}
 }
 
+// PostCart godoc
+// @Summary カートに商品を保存する
+// @Tags cart
+// @Accept json
+// @Produce json
+// @Param request body PostCartsParams ture "カートの商品"
+// @Success 204 {object} Response
+// @Router /v1/cart [post]
 func(h handler) PostCart(c *gin.Context) {
 	var params PostCartsParams
 

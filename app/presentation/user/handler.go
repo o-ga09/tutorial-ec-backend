@@ -20,6 +20,14 @@ func NewHandler(findUserUsecase *userApp.FindUserUsecase, saveUserUsecase *userA
 	}
 }
 
+// GetUser godoc
+// @Summary ユーザーを取得する
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param request path string ture "ユーザーID"
+// @Success 200 {object} getUserResponse
+// @Router /v1/products/:id [get]
 func(u handler) GetUserById(c *gin.Context) {
 	id := c.Param("id")
 	dto, err := u.findUserUsecase.Run(c,id)

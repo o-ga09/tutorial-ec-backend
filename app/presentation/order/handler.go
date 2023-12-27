@@ -21,6 +21,14 @@ func NewHandlre(saveOrderUsecase *orderApp.SaveOrderUseCase) handler {
 	}
 }
 
+// PostOrder godoc
+// @Summary 商品を注文する
+// @Tags order
+// @Accept json
+// @Produce json
+// @Param request body []PostOrderParams ture "注文商品"
+// @Success 201 {string} Response 
+// @Router /v1/order [post]
 func(o *handler) PostOrders(c *gin.Context) {
 	var params []*PostOrderParams
 

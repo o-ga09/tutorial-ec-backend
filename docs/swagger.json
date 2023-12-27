@@ -1,10 +1,123 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "Goでクリーンアーキテクチャを使用して。バックエンドAPIを作成する",
+        "title": "ECサイトバックエンドAPI",
+        "contact": {},
+        "version": "v0.1.0"
     },
+    "host": "localhost:8080",
     "paths": {
+        "/v1/cart": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "cart"
+                ],
+                "summary": "カートに商品を保存する",
+                "parameters": [
+                    {
+                        "description": "カートの商品",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/cart.PostCartsParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/cart.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/health": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "ヘルスチェック",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/health.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/order": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "商品を注文する",
+                "parameters": [
+                    {
+                        "description": "注文商品",
+                        "name": "request",
+                        "in": "body",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/order.PostOrderParams"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/products": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "商品一覧を取得する",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/products.getProductResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -38,9 +151,80 @@
                     }
                 }
             }
+        },
+        "/v1/products/:id": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "ユーザーを取得する",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ユーザーID",
+                        "name": "request",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/user.getUserResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "cart.PostCartsParams": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "cart.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "health.Response": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "order.PostOrderParams": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
         "products.PostRequestParm": {
             "type": "object",
             "properties": {
@@ -95,11 +279,74 @@
                 }
             }
         },
+        "products.getProductResponse": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "商品の説明",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "商品ID",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "商品名",
+                    "type": "string"
+                },
+                "owner_id": {
+                    "description": "出品者ID",
+                    "type": "string"
+                },
+                "owner_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "description": "商品金額",
+                    "type": "integer"
+                },
+                "stock": {
+                    "description": "商品在庫",
+                    "type": "integer"
+                }
+            }
+        },
         "products.postProductResponse": {
             "type": "object",
             "properties": {
                 "product": {
                     "$ref": "#/definitions/products.ProductResponseModel"
+                }
+            }
+        },
+        "user.getUserResponse": {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "$ref": "#/definitions/user.userResponseModel"
+                }
+            }
+        },
+        "user.userResponseModel": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "phone_number": {
+                    "type": "string"
                 }
             }
         }

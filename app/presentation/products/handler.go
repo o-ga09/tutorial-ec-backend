@@ -73,6 +73,13 @@ func(h handler) PostProducts(c *gin.Context) {
 	c.JSON(http.StatusOK,response)
 }
 
+// PostProducts godoc
+// @Summary 商品一覧を取得する
+// @Tags products
+// @Accept json
+// @Produce json
+// @Success 200 {object} getProductResponse
+// @Router /v1/products [get]
 func(h handler) GetProducts(c *gin.Context) {
 	dtos, err := h.fetchProductUsecase.Run(c)
 	if err != nil {
