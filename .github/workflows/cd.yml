@@ -43,7 +43,7 @@ jobs:
 
   deploy:
     needs: golang-test
-    if: ${{ golang-test.result == 'success' }}
+    if: ${{ needs.golang-test.result == 'success' }}
     runs-on: ubuntu-latest
 
     steps:

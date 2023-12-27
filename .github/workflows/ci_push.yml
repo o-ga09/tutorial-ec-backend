@@ -11,8 +11,9 @@ jobs:
       - name: tag release skip
         run: |
           if [ "${{ startsWith(github.ref, 'refs/tags/') }}" = "true" ]; then
-            exit 0
+            exit 1
           fi
+        continue-on-error: true
 
       - uses: actions/checkout@v2
 
