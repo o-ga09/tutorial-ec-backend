@@ -72,3 +72,29 @@ func(h handler) PostProducts(c *gin.Context) {
 
 	c.JSON(http.StatusOK,response)
 }
+
+func(h handler) GetProducts(c *gin.Context) {
+	dtos, err := h.fetchProductUsecase.Run(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,gin.H{"code": 500, "message": "Internal Server Error"})
+		return
+	}
+
+	var products []getProductResponse
+
+	for _, dto := range dtos {
+		products = append(products, getProductResponse{
+			ProductResponseModel: &ProductResponseModel{
+				ID: dto.ID,
+				OwnerID: dto.OwnerID,
+				Name: dto.Name,
+				Description: dto.Description,
+				Price: dto.Price,
+				Stock: dto.Stock,
+			},
+			OwnerName: "owner name",
+		})
+	}
+
+	c.JSON(http.StatusOK,products)
+}
