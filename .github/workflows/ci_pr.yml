@@ -1,26 +1,23 @@
-# workflowの名前
 name: Backend Test PR
-# ワークフローを実行する条件
+
 on:
   pull_request:
-# 実行するジョブを定義する
+
 jobs:
   golang-test:
     name: test
     runs-on: ubuntu-latest
     steps:
-      # ソースをチェックアウトする
       - uses: actions/checkout@v2
 
-      # Goのセットアップをする
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.21
-      # Goのテストを実行する
+
       - name: testing
         run: |
           go test ./... -coverprofile=coverage.out
-      # カバレッジれポートを出力する
+
       - name: create report
         uses: k1LoW/octocov-action@v0

@@ -1,0 +1,29 @@
+name: API Document
+
+on:
+  push:
+    branches-ignore:
+      - "**"
+    tags:
+      - "v*"
+    paths:
+      - "**.go"
+jobs:
+  api-spec:
+    name: api-document
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+
+      - name: install swag
+        run: |
+          go install github.com/swaggo/swag/cmd/swag@latest
+
+      - name: create api document
+        run: |
+          swag init -g app/presentation/products/handler.go

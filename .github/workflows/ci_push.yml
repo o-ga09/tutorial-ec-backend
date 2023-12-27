@@ -3,6 +3,8 @@ name: Backend Test Push
 # ワークフローを実行する条件
 on:
   push:
+    branches-ignore:
+      - "main"
 # 実行するジョブを定義する
 jobs:
   golang-test:
