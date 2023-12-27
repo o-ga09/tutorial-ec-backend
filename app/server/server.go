@@ -25,7 +25,7 @@ import (
 func NewServer() (*gin.Engine, error) {
 	r := gin.New()
 	cfg := config.GetConfig()
-	if cfg.Env.Env == "PROD" {
+	if cfg.Env == "PROD" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"log"
+	"log/slog"
 
 	"github.com/o-ga09/tutorial-ec-backend/app/config"
 	"gorm.io/driver/mysql"
@@ -14,7 +15,8 @@ import (
 func New(ctx context.Context) *gorm.DB {
 	cfg := config.GetConfig()
 
-	dialector := mysql.Open(cfg.DB.DB_URL)
+	dialector := mysql.Open(cfg.Database_url)
+	slog.Info(cfg.Database_url)
 
 	db, err := gorm.Open(dialector, &gorm.Config{NamingStrategy: schema.NamingStrategy{
 		SingularTable: false,

@@ -1,19 +1,23 @@
 package config
 
 import (
-	"sync"
-
-	"github.com/kelseyhightower/envconfig"
+	"github.com/caarlos0/env"
 )
 
 type Config struct {
-	Env Env
-	App App
-	Server Server
-	DB DBConfig
-	ReadDB ReadDBConfig
-	Redis Redis
+	Env          string `env:"ENV" envDefault:"dev"`
+	Port         string `env:"PORT" envDefault:"80"`
+	Database_url string `env:"DB_URL" envDefult:""`
+	ProjectID    string `env:"PROJECTID" envDefault:""`
 }
+// type Config struct {
+// 	Env Env
+// 	App App
+// 	Server Server
+// 	DB DBConfig
+// 	ReadDB ReadDBConfig
+// 	Redis Redis
+// }
 
 type Env struct {
 	Env string `env:"ENV" json:"env,omitempty"`
@@ -29,11 +33,11 @@ type Server struct {
 }
 
 type DBConfig struct {
-	DB_URL string `env:"DB_URL" json:"db___url,omitempty"`
+	DB_URL string `env:"DB_URL" json:"db_url,omitempty"`
 }
 
 type ReadDBConfig struct {
-	DB_URL string `env:"DB_URL" json:"db___url,omitempty"`
+	DB_URL string `env:"DB_URL" json:"db_url,omitempty"`
 }
 
 type Redis struct {
@@ -41,17 +45,10 @@ type Redis struct {
 	Port string `env:"PORT" json:"port,omitempty"`
 }
 
-var (
-	once sync.Once
-	config Config
-)
-
 func GetConfig() *Config {
-	once.Do(
-		func() {
-			if err := envconfig.Process("",&config); err != nil {
-				panic(err)
-			}
-		})
-	return &config
+	cfg := &Config{}
+	if err := env.Parse(cfg); err != nil {
+		return nil
+	}
+	return cfg
 }
