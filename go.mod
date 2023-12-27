@@ -5,7 +5,7 @@ go 1.21.5
 require (
 	cloud.google.com/go/logging v1.9.0
 	github.com/DATA-DOG/go-sqlmock v1.5.1
-	github.com/caarlos0/env/v6 v6.10.1
+	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/gin-contrib/cors v1.5.0
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/validator/v10 v10.15.5
@@ -113,7 +113,6 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/jpillora/backoff v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/klauspost/compress v1.16.6 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
