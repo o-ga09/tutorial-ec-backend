@@ -4,6 +4,7 @@ import (
 	"context"
 
 	userDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/user"
+	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/schema"
 	"gorm.io/gorm"
 )
 
@@ -11,25 +12,14 @@ type userRepository struct {
 	conn *gorm.DB
 }
 
-type User struct {
-	id string
-	email string
-	phoneNumber string
-	lastName string
-	firstName string
-	pref string
-	city string
-	extra string
-}
-
 // FindAll implements user.UserRepository.
 func (u *userRepository) FindAll(ctx context.Context) ([]*userDomain.User, error) {
 	res := []*userDomain.User{}
-	users := []*User{}
+	users := []*schema.User{}
 	u.conn.Find(users)
 
 	for _, user := range users {
-		u, err := userDomain.Reconstract(user.id,user.email,user.phoneNumber,user.lastName,user.firstName,user.pref,user.city,user.extra)
+		u, err := userDomain.Reconstract(user.UserID,user.Email,user.PhoneNumber,user.LastName,user.FirstName,user.Pref,user.City,user.Extra)
 		if err != nil {
 			return nil, err
 		}
@@ -42,10 +32,10 @@ func (u *userRepository) FindAll(ctx context.Context) ([]*userDomain.User, error
 
 // FindById implements user.UserRepository.
 func (u *userRepository) FindById(ctx context.Context, id string) (*userDomain.User, error) {
-	user := User{}
+	user := schema.User{}
 
 	u.conn.Where("id = ?",id).Find(user)
-	res, err := userDomain.Reconstract(user.id,user.email,user.phoneNumber,user.lastName,user.firstName,user.pref,user.city,user.extra)
+	res, err := userDomain.Reconstract(user.UserID,user.Email,user.PhoneNumber,user.LastName,user.FirstName,user.Pref,user.City,user.Extra)
 	if err != nil {
 		return nil, err
 	}
@@ -54,15 +44,15 @@ func (u *userRepository) FindById(ctx context.Context, id string) (*userDomain.U
 
 // Save implements user.UserRepository.
 func (u *userRepository) Save(ctx context.Context, user *userDomain.User) error {
-	repoUser := User{
-		id: user.ID(),
-		email: user.Email(),
-		phoneNumber: user.PhoneNumber(),
-		lastName: user.LastName(),
-		firstName: user.FirstName(),
-		pref: user.Pref(),
-		city: user.City(),
-		extra: user.Extra(),
+	repoUser := schema.User{
+		UserID: user.ID(),
+		Email: user.Email(),
+		PhoneNumber: user.PhoneNumber(),
+		LastName: user.LastName(),
+		FirstName: user.FirstName(),
+		Pref: user.Pref(),
+		City: user.City(),
+		Extra: user.Extra(),
 	}
 
 	u.conn.Create(repoUser)
