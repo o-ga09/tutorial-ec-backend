@@ -37,5 +37,6 @@ services:
       - .:/app
     ports:
       - "8080:8080"
+    restart: always
 volumes:
   api-dbsrv01-data:
