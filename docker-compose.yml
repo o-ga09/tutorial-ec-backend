@@ -5,17 +5,53 @@ services:
     platform: linux/amd64
     container_name: api-dbsrv01
     environment:
+      TZ: "Asia/Tokyo"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_USER: api
       MYSQL_PASSWORD: P@ssw0rd
       MYSQL_DATABASE: api
       MYSQL_TCP_PORT: 3306
+    command: >
+      bash -c "
+      chmod 644 /etc/mysql/conf.d/my.cnf &&
+      /entrypoint.sh mysqld"
     volumes:
       - api-dbsrv01-data:/var/lib/mysql
-      - ./environment/db/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./environment/db/sql:/docker-entrypoint-initdb.d
+      - ./environment/db/master/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./environment/db/master/init:/docker-entrypoint-initdb.d
+      - api-dbsrv01-data-log:/var/log/mysql/
     ports:
       - "3306:3306"
+    networks:
+      - replica-network
+  api-dbsrv02:
+    image: mysql:8.0.29
+    platform: linux/amd64
+    container_name: api-dbsrv02
+    environment:
+      TZ: "Asia/Tokyo"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: api
+      MYSQL_PASSWORD: P@ssw0rd
+      MYSQL_DATABASE: api
+      MYSQL_TCP_PORT: 3306
+    command: >
+      bash -c "
+      chmod 644 /etc/mysql/conf.d/my.cnf &&
+      /entrypoint.sh mysqld"
+    volumes:
+      - api-dbsrv02-data:/var/lib/mysql
+      - ./environment/db/slave/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./environment/db/slave/init:/docker-entrypoint-initdb.d
+      - api-dbsrv02-data-log:/var/log/mysql/
+    ports:
+      - "3307:3306"
+    networks:
+      - replica-network
+  redis:
+    image: redis:6.0-alpine3.18
+    ports:
+      - 6379:6379
   app:
     image: api-srv
     depends_on:
@@ -38,5 +74,13 @@ services:
     ports:
       - "8080:8080"
     restart: always
+    networks:
+      - replica-network
 volumes:
   api-dbsrv01-data:
+  api-dbsrv02-data:
+  api-dbsrv01-data-log:
+  api-dbsrv02-data-log:
+networks:
+  replica-network:
+    driver: bridge
