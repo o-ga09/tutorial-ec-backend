@@ -7,7 +7,8 @@ import (
 type Config struct {
 	Env          string `env:"ENV" envDefault:"dev"`
 	Port         string `env:"PORT" envDefault:"80"`
-	Database_url string `env:"DB_URL" envDefult:""`
+	Database_url string `env:"DB_URL" envDefault:""`
+	RedisURL string `env:"REDIS_URL" envDefault:""`
 	ProjectID    string `env:"PROJECTID" envDefault:""`
 }
 // type Config struct {

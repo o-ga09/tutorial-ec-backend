@@ -1,9 +1,9 @@
 version: "3.9"
 services:
-  api-dbsrv01:
+  api-dbsrv-01:
     image: mysql:8.0.29
     platform: linux/amd64
-    container_name: api-dbsrv01
+    container_name: api-dbsrv-01
     environment:
       TZ: "Asia/Tokyo"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -11,51 +11,26 @@ services:
       MYSQL_PASSWORD: P@ssw0rd
       MYSQL_DATABASE: api
       MYSQL_TCP_PORT: 3306
-    command: >
-      bash -c "
-      chmod 644 /etc/mysql/conf.d/my.cnf &&
-      /entrypoint.sh mysqld"
     volumes:
       - api-dbsrv01-data:/var/lib/mysql
-      - ./environment/db/master/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./environment/db/master/init:/docker-entrypoint-initdb.d
-      - api-dbsrv01-data-log:/var/log/mysql/
+      - ./environment/db/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./environment/db/init:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
       - replica-network
-  api-dbsrv02:
-    image: mysql:8.0.29
-    platform: linux/amd64
-    container_name: api-dbsrv02
-    environment:
-      TZ: "Asia/Tokyo"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_USER: api
-      MYSQL_PASSWORD: P@ssw0rd
-      MYSQL_DATABASE: api
-      MYSQL_TCP_PORT: 3306
-    command: >
-      bash -c "
-      chmod 644 /etc/mysql/conf.d/my.cnf &&
-      /entrypoint.sh mysqld"
-    volumes:
-      - api-dbsrv02-data:/var/lib/mysql
-      - ./environment/db/slave/conf.d/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./environment/db/slave/init:/docker-entrypoint-initdb.d
-      - api-dbsrv02-data-log:/var/log/mysql/
-    ports:
-      - "3307:3306"
-    networks:
-      - replica-network
-  redis:
+  api-dbsrv-02:
     image: redis:6.0-alpine3.18
+    container_name: api-dbsrv-02
     ports:
       - 6379:6379
-  app:
+    networks:
+      - replica-network
+  api-srv:
     image: api-srv
     depends_on:
-      - api-dbsrv01
+      - api-dbsrv-01
+      - api-dbsrv-02
     build:
       context: .
       dockerfile: ./environment/go/dockerfile
@@ -63,12 +38,9 @@ services:
         - target=dev
     environment:
       ENV: dev
-      APP_NAME: app
-      APP_VERSION: DEV
-      LOG_LEVEL: info
       PORT: 8080
-      DB_URL: api:P@ssw0rd@tcp(api-dbsrv01)/api?charset=utf8&parseTime=True&loc=Local
-      Access-Control-Allow-Origin: "*"
+      DB_URL: api:P@ssw0rd@tcp(api-dbsrv-01)/api?charset=utf8&parseTime=True&loc=Local
+      REDIS_URL: "api-dbsrv-02:6379"
     volumes:
       - .:/app
     ports:
@@ -78,9 +50,6 @@ services:
       - replica-network
 volumes:
   api-dbsrv01-data:
-  api-dbsrv02-data:
-  api-dbsrv01-data-log:
-  api-dbsrv02-data-log:
 networks:
   replica-network:
     driver: bridge

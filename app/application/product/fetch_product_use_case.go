@@ -17,6 +17,7 @@ type FetchProductUseCaseDto struct {
 	Description string // 商品の説明
 	Price       int64  // 商品金額
 	Stock       int    // 商品在庫
+	OwnerName string // 出品者氏名
 }
 
 func(u FetchProductUseCase) Run(ctx context.Context) ([]*FetchProductUseCaseDto, error) {
@@ -35,6 +36,7 @@ func(u FetchProductUseCase) Run(ctx context.Context) ([]*FetchProductUseCaseDto,
 			qsDto.Description,
 			qsDto.Price,
 			qsDto.Stock,
+			qsDto.OwnerName,
 		})
 	}
 

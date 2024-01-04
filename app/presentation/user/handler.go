@@ -1,11 +1,12 @@
 package user
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	userApp "github.com/o-ga09/tutorial-ec-backend/app/application/user"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
 
 type handler struct {
@@ -32,7 +33,8 @@ func(u handler) GetUserById(c *gin.Context) {
 	id := c.Param("id")
 	dto, err := u.findUserUsecase.Run(c,id)
 	if err != nil {
-		log.Println("error")
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
+		c.JSON(http.StatusBadRequest,gin.H{"code": 500, "message": "Internal Server Error"})
 		return
 	}
 

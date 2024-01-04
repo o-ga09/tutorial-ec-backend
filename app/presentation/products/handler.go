@@ -1,10 +1,12 @@
 package products
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/o-ga09/tutorial-ec-backend/app/application/product"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 	"github.com/o-ga09/tutorial-ec-backend/pkg/validator"
 )
 
@@ -31,15 +33,17 @@ func NewHandler(saveProductUsecas *product.SaveProductUsecase, fetchProductUseca
 func(h handler) PostProducts(c *gin.Context) {
 	var requestParam PostRequestParm
 
-	err := c.ShouldBindJSON(requestParam)
+	err := c.ShouldBindJSON(&requestParam)
 	if err != nil {
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
 		c.JSON(http.StatusBadRequest,gin.H{"code": 403, "message": "Bad Request"})
 		return
 	}
 
 	validate := validator.GetValidator()
-	err = validate.Struct(requestParam)
+	err = validate.Struct(&requestParam)
 	if err != nil {
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
 		c.JSON(http.StatusBadRequest,gin.H{"code": 403, "message": "Bad Request"})
 		return
 	}
@@ -54,6 +58,7 @@ func(h handler) PostProducts(c *gin.Context) {
 
 	dto, err := h.saveProductUsecase.Run(c,input)
 	if err != nil {
+		slog.Log(c, middleware.SeverityInfo, "error","err msg",err)
 		c.JSON(http.StatusInternalServerError,gin.H{"code": 500, "message": "Internal Server Eerror"})
 		return
 
@@ -83,6 +88,7 @@ func(h handler) PostProducts(c *gin.Context) {
 func(h handler) GetProducts(c *gin.Context) {
 	dtos, err := h.fetchProductUsecase.Run(c)
 	if err != nil {
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
 		c.JSON(http.StatusInternalServerError,gin.H{"code": 500, "message": "Internal Server Error"})
 		return
 	}
@@ -99,9 +105,9 @@ func(h handler) GetProducts(c *gin.Context) {
 				Price: dto.Price,
 				Stock: dto.Stock,
 			},
-			OwnerName: "owner name",
+			OwnerName: dto.OwnerName,
 		})
 	}
-
+	slog.Log(c, middleware.SeverityInfo, "done")
 	c.JSON(http.StatusOK,products)
 }

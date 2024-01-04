@@ -3,9 +3,11 @@ package repository
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/o-ga09/tutorial-ec-backend/app/domain/product"
 	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/schema"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 	"gorm.io/gorm"
 )
 
@@ -60,7 +62,11 @@ func (r *productRepository) Save(ctx context.Context, product *product.Product) 
 		Stock: product.Stock(),
 	}
 
-	r.conn.Create(repoProduct)
+	err := r.conn.Create(&repoProduct).Error
+	if err != nil {
+		slog.Log(ctx,middleware.SeverityError,"repository error",err)
+		return err
+	}
 	return nil
 }
 

@@ -9,6 +9,7 @@ type FetchProductlistDto struct {
 	Description string // 商品の説明
 	Price       int64  // 商品金額
 	Stock       int    // 商品在庫
+	OwnerName string // 出品者氏名
 }
 
 type ProductQueryService interface {

@@ -2,8 +2,10 @@ package product
 
 import (
 	"context"
+	"log/slog"
 
 	productDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/product"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
 
 type SaveProductUsecase struct {
@@ -34,10 +36,12 @@ type SaveProductUsecaseOutputDto struct {
 func(u *SaveProductUsecase) Run(ctx context.Context, input SaveProductUsecaseInputDto) (*SaveProductUsecaseOutputDto, error) {
 	p, err := productDomain.NewProduct(input.OwnerID,input.Name,input.Description,input.Price,input.Stock)
 	if err != nil {
+		slog.Log(ctx,middleware.SeverityError,"app error",err)
 		return nil, err
 	}
 
 	if err := u.productRepo.Save(ctx,p); err != nil {
+		slog.Log(ctx,middleware.SeverityError,"failed to save",err)
 		return nil, err
 	}
 	

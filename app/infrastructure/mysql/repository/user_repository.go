@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
+	"log/slog"
 
 	userDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/user"
 	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/schema"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 	"gorm.io/gorm"
 )
 
@@ -34,9 +36,16 @@ func (u *userRepository) FindAll(ctx context.Context) ([]*userDomain.User, error
 func (u *userRepository) FindById(ctx context.Context, id string) (*userDomain.User, error) {
 	user := schema.User{}
 
-	u.conn.Where("id = ?",id).Find(user)
+	err := u.conn.Where("user_id = ?",id).Find(&user).Error
+
+	if err != nil {
+		slog.Log(ctx, middleware.SeverityError, "record not found","err msg",err)
+		return nil, gorm.ErrRecordNotFound
+	}
+	
 	res, err := userDomain.Reconstract(user.UserID,user.Email,user.PhoneNumber,user.LastName,user.FirstName,user.Pref,user.City,user.Extra)
 	if err != nil {
+		slog.Log(ctx, middleware.SeverityError, "repository error","err msg",err)
 		return nil, err
 	}
 	return res, nil

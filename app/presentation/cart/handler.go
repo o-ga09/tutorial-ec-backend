@@ -1,11 +1,12 @@
 package cart
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	cartApp "github.com/o-ga09/tutorial-ec-backend/app/application/cart"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 	"github.com/o-ga09/tutorial-ec-backend/pkg/validator"
 )
 
@@ -31,18 +32,19 @@ func(h handler) PostCart(c *gin.Context) {
 	var params PostCartsParams
 
 	if err := c.ShouldBindJSON(&params); err != nil {
-		log.Println("error")
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
 		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "error"})
 	}
 
 	validate := validator.GetValidator()
 	if err := validate.Struct(&params); err != nil {
-		log.Println("error")
-		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "error"})
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
+		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "Bad Request"})
+		return
 	}
 
-	// 本来はsessionのuserIDを使う
-	userID := "summy_user_id"
+	u, _ := c.Get("user_id")
+	userID, _ := u.(string)
 
 	dto := cartApp.AddCartUsecaseInputDto{
 		ProductID: params.ProductID,
@@ -51,8 +53,9 @@ func(h handler) PostCart(c *gin.Context) {
 	}
 
 	if err := h.addCartUsecase.Run(c,dto); err != nil {
-		log.Println("error")
-		c.JSON(http.StatusInternalServerError, Response{Code: 500, Message: "error"})
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
+		c.JSON(http.StatusInternalServerError, Response{Code: 500, Message: "Internal Server Error"})
+		return
 	}
 
 	c.JSON(http.StatusNoContent, Response{Code: 204, Message: "OK"})

@@ -2,8 +2,10 @@ package user
 
 import (
 	"context"
+	"log/slog"
 
 	userDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/user"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
 
 type FindUserUsecase struct {
@@ -26,6 +28,7 @@ type FindUserUsecaseDto struct {
 func(u *FindUserUsecase) Run(ctx context.Context, id string) (*FindUserUsecaseDto, error) {
 	user, err := u.userRepo.FindById(ctx, id)
 	if err != nil {
+		slog.Log(ctx, middleware.SeverityError, "error","app error",err)
 		return nil, err
 	}
 	

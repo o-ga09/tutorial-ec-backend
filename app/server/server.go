@@ -13,12 +13,13 @@ import (
 	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql"
 	queryservice "github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/query_service"
 	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/mysql/repository"
+	"github.com/o-ga09/tutorial-ec-backend/app/infrastructure/redis"
 	redisRepo "github.com/o-ga09/tutorial-ec-backend/app/infrastructure/redis/repository"
 	cartHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/cart"
+	"github.com/o-ga09/tutorial-ec-backend/app/presentation/health"
 	orderHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/order"
 	productsHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/products"
 	userHandler "github.com/o-ga09/tutorial-ec-backend/app/presentation/user"
-	"github.com/o-ga09/tutorial-ec-backend/app/server/handler/health"
 	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 )
 
@@ -40,15 +41,16 @@ func NewServer() (*gin.Engine, error) {
 	r.Use(httpLogger)
 
 	db := mysql.New(context.Background())
-	systemHandler := health.NewHealthCheckHandler()
+	redis := redis.NewRedisClient(context.Background())
+	systemHandler := health.NewHandler()
 	userRepo := repository.NewUserRepository(db)
 	productRepo := repository.NewProductRepository(db)
 	fetchQueryService := queryservice.NewproductQueryService(db)
 	orderRepo := repository.NewOrderRepository(db)
-	cartRepo := redisRepo.NewCartRepository()
+	cartRepo := redisRepo.NewCartRepository(redis)
 	userHandler := userHandler.NewHandler(userApp.NewFindUserUsecase(userRepo),userApp.NewSaveUserUsecase(userRepo))
 	productHandler := productsHandler.NewHandler(productApp.NewSaveProductUsecase(productRepo),productApp.NewFetchProductUseCase(fetchQueryService))
-	orderHandler := orderHandler.NewHandlre(orderApp.NewSaveOrderUseCase(orderDomain.NewOrderDomainService(orderRepo,productRepo),redisRepo.NewCartRepository()))
+	orderHandler := orderHandler.NewHandlre(orderApp.NewSaveOrderUseCase(orderDomain.NewOrderDomainService(orderRepo,productRepo),redisRepo.NewCartRepository(redis)))
 	cartHandler := cartHandler.NewHandler(cartApp.NewAddCartUsecase(cartRepo,productRepo))
 
 	v1 := r.Group("/v1")
@@ -57,7 +59,7 @@ func NewServer() (*gin.Engine, error) {
 	cart := v1.Group("/cart")
 	products := v1.Group("/products")
 	{
-		v1.GET("/health", systemHandler.HealthCheck)
+		v1.GET("/health", systemHandler.Health)
 		users.GET("/:id",userHandler.GetUserById)
 		products.GET("",productHandler.GetProducts)
 		products.POST("",productHandler.PostProducts)

@@ -2,12 +2,13 @@ package order
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	orderApp "github.com/o-ga09/tutorial-ec-backend/app/application/order"
+	"github.com/o-ga09/tutorial-ec-backend/app/server/middleware"
 	"github.com/o-ga09/tutorial-ec-backend/pkg/validator"
 )
 
@@ -19,6 +20,11 @@ func NewHandlre(saveOrderUsecase *orderApp.SaveOrderUseCase) handler {
 	return handler{
 		saveOrderUsecase: saveOrderUsecase,
 	}
+}
+
+type Sample struct {
+	name string `validate:"min=1,max=99"`
+	id string `validate:"max=9"`
 }
 
 // PostOrder godoc
@@ -34,20 +40,24 @@ func(o *handler) PostOrders(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&params)
 	if err != nil {
-		log.Println("error")
-		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "error"})
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
+		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "Bad Request"})
 		return
 	}
 
 	validate := validator.GetValidator()
-	if err := validate.Struct(&params); err != nil {
-		log.Println("error")
-		c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "error"})
-		return
+	for _, param := range params {
+		if err := validate.Struct(param); err != nil {
+			slog.Log(c, middleware.SeverityError, "error","err msg",params)
+			c.JSON(http.StatusBadRequest, Response{Code: 403, Message: "Bad Request"})
+			return
+		}
 	}
 
 	// 本来はsessionのuserIDを使う
-	userID := "dummy_user_id"
+	u, _ := c.Get("user_id")
+	userID, _ := u.(string)
+
 	dtos := make([]orderApp.SaveOrderUseCaseInputDto,0,len(params))
 
 	for _, dto := range params {
@@ -59,10 +69,10 @@ func(o *handler) PostOrders(c *gin.Context) {
 
 	id, err := o.saveOrderUsecase.Run(c,userID,dtos,time.Now())
 	if err != nil {
-		log.Println("error")
-		c.JSON(http.StatusInternalServerError, Response{Code: 500, Message: "error"})
+		slog.Log(c, middleware.SeverityError, "error","err msg",err)
+		c.JSON(http.StatusInternalServerError, Response{Code: 500, Message: "Internal Server Error"})
 		return
 	}
-
+	slog.Log(c, middleware.SeverityError, "success")
 	c.JSON(http.StatusCreated, Response{Code: 201, Message: fmt.Sprintf("id : %s",id)})
 }

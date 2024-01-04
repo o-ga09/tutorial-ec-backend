@@ -1,0 +1,47 @@
+# 商品を保存する
+POST http://localhost:8080/v1/products HTTP/1.1
+content-type: application/json
+
+  {
+    "description": "test product",
+    "name": "test",
+    "owner_id": "000000000",
+    "price": 100,
+    "stock": 100
+  }
+
+###
+
+# 商品の一覧を取得する
+GET  http://localhost:8080/v1/products HTTP/1.1
+content-type: application/json
+
+###
+
+# ユーザー一覧を取得する
+GET  http://localhost:8080/v1/users/0000000000 HTTP/1.1
+content-type: application/json
+
+###
+
+# カートを保存する
+POST  http://localhost:8080/v1/cart HTTP/1.1
+content-type: application/json
+
+{
+  "product_id": "product 1",
+  "quantity": 100
+}
+
+###
+
+# 注文する
+POST  http://localhost:8080/v1/order HTTP/1.1
+content-type: application/json
+
+[
+  {
+    "product_id": "product 1",
+    "quantity": 100
+  }
+]

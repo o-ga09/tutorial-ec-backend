@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"context"
 	"time"
 
 	"github.com/o-ga09/tutorial-ec-backend/app/config"
@@ -19,9 +20,10 @@ func SetRedisClient(c *redis.Client) {
 	client = c
 }
 
-func NewRedisClient(cfg config.Redis) *redis.Client {
+func NewRedisClient(ctx context.Context) *redis.Client {
+	cfg := config.GetConfig()
 	client = redis.NewClient(&redis.Options{
-		Addr: cfg.Host + ":" + cfg.Port ,
+		Addr: cfg.RedisURL ,
 		ReadTimeout: 3 * time.Minute,
 		WriteTimeout: 3 * time.Minute,
 		ContextTimeoutEnabled: true,
