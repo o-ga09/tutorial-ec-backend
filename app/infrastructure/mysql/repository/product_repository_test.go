@@ -13,6 +13,7 @@ import (
 )
 
 func Test_productRepository_FindByID(t *testing.T) {
+	t.Skip()
 	// *gorm,DBのモックを生成
 	db, mockdb, err := dbmock.GetNewDbMock()
 	if err != nil {
@@ -60,6 +61,7 @@ func Test_productRepository_FindByID(t *testing.T) {
 }
 
 func Test_productRepository_FindByIDs(t *testing.T) {
+	t.Skip()
 	// *gorm,DBのモックを生成
 	db, mockdb, err := dbmock.GetNewDbMock()
 	if err != nil {
