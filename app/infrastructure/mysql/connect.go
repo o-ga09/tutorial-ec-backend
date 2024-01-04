@@ -23,7 +23,7 @@ func New(ctx context.Context) *gorm.DB {
 	}}); 
 
 	if err != nil {
-		//panic(err)
+		panic(err)
 	}
 
 	if cfg.Env == "dev" {
