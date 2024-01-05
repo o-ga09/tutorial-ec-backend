@@ -83,9 +83,9 @@ INSERT INTO products (`product_id`, `owner_id`, `name`, `description`, `price`, 
   ('product-4', 'owner-4', '商品4', '商品の説明4', 4000, 40);
 
 INSERT INTO users (`user_id`, `email`, `phonenumber`, `last_name`, `first_name`, `prefecture`, `city`, `extra`) VALUES
-  ('user-1', 'user1@example.com', '090-1234-5678', '山田', '太郎', '東京', '渋谷', 'NULL'),
-  ('user-2', 'user2@example.com', '090-8765-4321', '佐藤', '花子', '大阪', '大阪市', 'NULL'),
-  ('user-3', 'user3@example.com', '090-1122-3344', '斎藤', '健', '神奈川', '横浜市', 'NULL');
+  ('user-1', 'user1@example.com', '090-1234-5678', '山田', '太郎', '東京', '渋谷区', '道玄坂'),
+  ('user-2', 'user2@example.com', '090-8765-4321', '佐藤', '花子', '大阪', '大阪市', '難波'),
+  ('user-3', 'user3@example.com', '090-1122-3344', '斎藤', '健', '神奈川', '横浜市', '港北');
 
 INSERT INTO owners (`owner_id`, `email`, `name`) VALUES
   ('owner-1', 'owner1@example.com', '店舗1'),

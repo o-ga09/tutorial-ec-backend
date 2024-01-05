@@ -48,7 +48,7 @@ func NewServer() (*gin.Engine, error) {
 	fetchQueryService := queryservice.NewproductQueryService(db)
 	orderRepo := repository.NewOrderRepository(db)
 	cartRepo := redisRepo.NewCartRepository(redis)
-	userHandler := userHandler.NewHandler(userApp.NewFindUserUsecase(userRepo),userApp.NewSaveUserUsecase(userRepo))
+	userHandler := userHandler.NewHandler(userApp.NewFindUserUsecase(userRepo),userApp.NewFindAllUsersUseCase(userRepo),userApp.NewSaveUserUsecase(userRepo),userApp.NewDeleteUserUsecase(userRepo))
 	productHandler := productsHandler.NewHandler(productApp.NewSaveProductUsecase(productRepo),productApp.NewFetchProductUseCase(fetchQueryService))
 	orderHandler := orderHandler.NewHandlre(orderApp.NewSaveOrderUseCase(orderDomain.NewOrderDomainService(orderRepo,productRepo),redisRepo.NewCartRepository(redis)))
 	cartHandler := cartHandler.NewHandler(cartApp.NewAddCartUsecase(cartRepo,productRepo))
@@ -61,6 +61,9 @@ func NewServer() (*gin.Engine, error) {
 	{
 		v1.GET("/health", systemHandler.Health)
 		users.GET("/:id",userHandler.GetUserById)
+		users.GET("",userHandler.GetUsers)
+		users.POST("",userHandler.CreateUser)
+		users.DELETE("/:id",userHandler.DeleteUser)
 		products.GET("",productHandler.GetProducts)
 		products.POST("",productHandler.PostProducts)
 		order.POST("",orderHandler.PostOrders)

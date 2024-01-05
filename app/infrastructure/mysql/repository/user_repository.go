@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 
 	userDomain "github.com/o-ga09/tutorial-ec-backend/app/domain/user"
@@ -14,14 +15,28 @@ type userRepository struct {
 	conn *gorm.DB
 }
 
+// Delete implements user.UserRepository.
+func (u *userRepository) Delete(ctx context.Context, id string) error {
+	user := schema.User{}
+	err := u.conn.Where("user_id = ?", id).Delete(&user).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // FindAll implements user.UserRepository.
 func (u *userRepository) FindAll(ctx context.Context) ([]*userDomain.User, error) {
 	res := []*userDomain.User{}
 	users := []*schema.User{}
-	u.conn.Find(users)
+	err := u.conn.Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
 
 	for _, user := range users {
-		u, err := userDomain.Reconstract(user.UserID,user.Email,user.PhoneNumber,user.LastName,user.FirstName,user.Pref,user.City,user.Extra)
+		u, err := userDomain.Reconstract(user.UserID, user.Email, user.PhoneNumber, user.LastName, user.FirstName, user.Pref, user.City, user.Extra)
 		if err != nil {
 			return nil, err
 		}
@@ -29,23 +44,24 @@ func (u *userRepository) FindAll(ctx context.Context) ([]*userDomain.User, error
 		res = append(res, u)
 	}
 
-	return res , nil
+	return res, nil
 }
 
 // FindById implements user.UserRepository.
 func (u *userRepository) FindById(ctx context.Context, id string) (*userDomain.User, error) {
 	user := schema.User{}
 
-	err := u.conn.Where("user_id = ?",id).Find(&user).Error
+	err := u.conn.Where("user_id = ?", id).Find(&user).Error
 
-	if err != nil {
-		slog.Log(ctx, middleware.SeverityError, "record not found","err msg",err)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		slog.Log(ctx, middleware.SeverityError, "record not found", "err msg", id)
 		return nil, gorm.ErrRecordNotFound
 	}
-	
-	res, err := userDomain.Reconstract(user.UserID,user.Email,user.PhoneNumber,user.LastName,user.FirstName,user.Pref,user.City,user.Extra)
+
+	slog.Log(ctx, middleware.SeverityInfo, "Debug", "user", user)
+	res, err := userDomain.Reconstract(user.UserID, user.Email, user.PhoneNumber, user.LastName, user.FirstName, user.Pref, user.City, user.Extra)
 	if err != nil {
-		slog.Log(ctx, middleware.SeverityError, "repository error","err msg",err)
+		slog.Log(ctx, middleware.SeverityError, "repository error", "err msg", err)
 		return nil, err
 	}
 	return res, nil
@@ -54,18 +70,18 @@ func (u *userRepository) FindById(ctx context.Context, id string) (*userDomain.U
 // Save implements user.UserRepository.
 func (u *userRepository) Save(ctx context.Context, user *userDomain.User) error {
 	repoUser := schema.User{
-		UserID: user.ID(),
-		Email: user.Email(),
+		UserID:      user.ID(),
+		Email:       user.Email(),
 		PhoneNumber: user.PhoneNumber(),
-		LastName: user.LastName(),
-		FirstName: user.FirstName(),
-		Pref: user.Pref(),
-		City: user.City(),
-		Extra: user.Extra(),
+		LastName:    user.LastName(),
+		FirstName:   user.FirstName(),
+		Pref:        user.Pref(),
+		City:        user.City(),
+		Extra:       user.Extra(),
 	}
 
-	u.conn.Create(repoUser)
-	return nil
+	err := u.conn.Save(&repoUser).Error
+	return err
 }
 
 func NewUserRepository(conn *gorm.DB) userDomain.UserRepository {

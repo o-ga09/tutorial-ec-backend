@@ -18,8 +18,40 @@ content-type: application/json
 
 ###
 
+# ユーザーを取得する
+GET  http://localhost:8080/v1/users/b196a2267ebf45feafb49a5625585e55 HTTP/1.1
+content-type: application/json
+
+###
+
 # ユーザー一覧を取得する
-GET  http://localhost:8080/v1/users/0000000000 HTTP/1.1
+
+GET  http://localhost:8080/v1/users HTTP/1.1
+content-type: application/json
+
+
+###
+
+# ユーザーを登録する
+
+POST  http://localhost:8080/v1/users HTTP/1.1
+content-type: application/json
+
+  {
+    "email": "eample@gmail.com",
+    "phone_number": "090-0000-0000",
+    "last_name": "田中",
+    "first_name": "太郎",
+    "pref": "東京都",
+    "city": "渋谷区",
+    "extra": "道玄坂１−１−１"
+  }
+
+###
+
+# ユーザーを削除する
+
+DELETE  http://localhost:8080/v1/users/b196a2267ebf45feafb49a5625585e55 HTTP/1.1
 content-type: application/json
 
 ###
